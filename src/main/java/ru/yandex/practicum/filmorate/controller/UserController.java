@@ -33,7 +33,7 @@ public class UserController {
         if (user.getBirthday().isBefore(LocalDate.now())
                 && ((user.getLogin() != null))) {
 
-            if (user.getName() == null){
+            if (user.getName() == null) {
                 user.setName(user.getLogin());
             }
             user.setId(getNextId());
@@ -60,7 +60,7 @@ public class UserController {
         if (users.containsKey(newUser.getId())) {
             User oldUser = users.get(newUser.getId());
 
-            if(newUser.getLogin() != null || newUser.getBirthday().isBefore(LocalDate.now())) {
+            if (newUser.getLogin() != null || newUser.getBirthday().isBefore(LocalDate.now())) {
                 if (newUser.getName() == null) {
                     oldUser.setName(newUser.getLogin());
                 } else {
@@ -92,7 +92,7 @@ public class UserController {
         return nextId;
     }
 
-    private void checkEmail(User user){
+    private void checkEmail(User user) {
         if ((user.getEmail() == null || user.getEmail().isBlank())
                 || (!user.getEmail().contains("@"))) {
 

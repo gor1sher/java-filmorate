@@ -24,7 +24,7 @@ public class FilmControllerTest {
     FilmController filmController;
 
     @Test
-    public void testFilmCreate(){
+    public void testFilmCreate() {
         Film film = new Film();
 
         film.setName("run");
@@ -38,7 +38,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void testFilmCreate_EmptyMovieTitle(){
+    public void testFilmCreate_EmptyMovieTitle() {
         Film film = new Film();
 
         film.setName("");
@@ -52,7 +52,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void testFilmCreate_EmptyMovieDescription(){
+    public void testFilmCreate_EmptyMovieDescription() {
         Film film = new Film();
 
         film.setName("run");
@@ -66,7 +66,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void testFindAll_ReturnListOfMovies(){
+    public void testFindAll_ReturnListOfMovies() {
         Film film1 = new Film();
 
         film1.setName("run");
@@ -92,7 +92,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void testUpdateFilm(){
+    public void testUpdateFilm() {
         Film film1 = new Film();
 
         film1.setName("run");

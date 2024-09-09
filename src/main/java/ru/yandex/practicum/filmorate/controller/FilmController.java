@@ -6,10 +6,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +58,7 @@ public class FilmController {
             throw new ConditionsNotMetException("Название не может быть пустым");
         }
 
-        if (films.containsKey(newFilm.getId())){
+        if (films.containsKey(newFilm.getId())) {
             if ((newFilm.getDescription().length() < 200) && (!newFilm.getDuration().isNegative())
                     && newFilm.getReleaseDate().isAfter(beginning)) {
 

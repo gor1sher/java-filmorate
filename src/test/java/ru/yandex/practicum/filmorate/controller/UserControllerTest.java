@@ -25,7 +25,7 @@ public class UserControllerTest {
     UserController userController;
 
     @Test
-    public void testUserCreate(){
+    public void testUserCreate() {
         User user = new User();
 
         user.setName("log");
@@ -37,7 +37,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testUserCreate_ErrorInEmail(){
+    public void testUserCreate_ErrorInEmail() {
         User user = new User();
 
         user.setName("log");
@@ -47,11 +47,11 @@ public class UserControllerTest {
 
         assertThrows(ConditionsNotMetException.class, () -> {
             userController.create(user);
-        },"Email не указан либо некорректно введен");
+        }, "Email не указан либо некорректно введен");
     }
 
     @Test
-    public void testUserCreate_IncorrectLoginInformation(){
+    public void testUserCreate_IncorrectLoginInformation() {
         User user = new User();
 
         user.setName("log");
@@ -60,11 +60,11 @@ public class UserControllerTest {
 
         assertThrows(ConditionsNotMetException.class, () -> {
             userController.create(user);
-        },"Не выполнены условия для регистрации пользователя");
+        }, "Не выполнены условия для регистрации пользователя");
     }
 
     @Test
-    public void testUserCreate_IncorrectBirthdayInformation(){
+    public void testUserCreate_IncorrectBirthdayInformation() {
         User user = new User();
 
         user.setName("log");
@@ -74,11 +74,11 @@ public class UserControllerTest {
 
         assertThrows(ConditionsNotMetException.class, () -> {
             userController.create(user);
-        },"Не выполнены условия для регистрации пользователя");
+        }, "Не выполнены условия для регистрации пользователя");
     }
 
     @Test
-    public void testFindAll_ReturnListOfUsers(){
+    public void testFindAll_ReturnListOfUsers() {
         User user1 = new User();
 
         user1.setName("log");
@@ -104,7 +104,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testUserUpdate(){
+    public void testUserUpdate() {
         User user1 = new User();
 
         user1.setName("log");
@@ -121,7 +121,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testUserUpdate_EmailIsEmpty(){
+    public void testUserUpdate_EmailIsEmpty() {
         User user1 = new User();
 
         user1.setName("log");
@@ -137,6 +137,6 @@ public class UserControllerTest {
 
         assertThrows(ConditionsNotMetException.class, () -> {
             userController.update(user2);
-        },"Некорректные данные");
+        }, "Некорректные данные");
     }
 }
