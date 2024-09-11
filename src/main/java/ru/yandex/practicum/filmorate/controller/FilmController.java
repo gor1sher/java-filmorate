@@ -34,7 +34,7 @@ public class FilmController {
         }
 
         if ((film.getDescription().length() < 200) && (film.getReleaseDate().isAfter(beginning))
-                && (!film.getDuration().isNegative())) {
+                && (film.getDuration() > 0)) {
 
             film.setId(getNextId());
 
@@ -59,8 +59,8 @@ public class FilmController {
         }
 
         if (films.containsKey(newFilm.getId())) {
-            if ((newFilm.getDescription().length() < 200) && (!newFilm.getDuration().isNegative())
-                    && newFilm.getReleaseDate().isAfter(beginning)) {
+            if ((newFilm.getDescription().length() < 200)
+                    && newFilm.getReleaseDate().isAfter(beginning) && (newFilm.getDuration() > 0)) {
 
                 Film oldFilm = films.get(newFilm.getId());
                 oldFilm.setDescription(newFilm.getDescription());
