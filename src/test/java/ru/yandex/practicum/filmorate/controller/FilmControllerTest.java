@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -29,7 +28,7 @@ public class FilmControllerTest {
 
         film.setName("run");
         film.setDescription("run on the forest");
-        film.setDuration(Duration.ofMinutes(123));
+        film.setDuration(123);
         film.setReleaseDate(LocalDate.now().minusDays(2));
 
         Film film2 = filmController.create(film);
@@ -43,7 +42,7 @@ public class FilmControllerTest {
 
         film.setName("");
         film.setDescription("run on the forest");
-        film.setDuration(Duration.ofMinutes(123));
+        film.setDuration(123);
         film.setReleaseDate(LocalDate.now().minusDays(2));
 
         assertThrows(ConditionsNotMetException.class, () -> {
@@ -57,7 +56,7 @@ public class FilmControllerTest {
 
         film.setName("run");
         film.setDescription("run on the forest");
-        film.setDuration(Duration.ofMinutes(123));
+        film.setDuration(123);
         film.setReleaseDate(LocalDate.of(1894, 12, 28));
 
         assertThrows(ConditionsNotMetException.class, () -> {
@@ -71,7 +70,7 @@ public class FilmControllerTest {
 
         film1.setName("run");
         film1.setDescription("run on the forest");
-        film1.setDuration(Duration.ofMinutes(123));
+        film1.setDuration(123);
         film1.setReleaseDate(LocalDate.now().minusDays(2));
 
         filmController.create(film1);
@@ -80,7 +79,7 @@ public class FilmControllerTest {
 
         film2.setName("out");
         film2.setDescription("run on the forest");
-        film2.setDuration(Duration.ofMinutes(123));
+        film2.setDuration(123);
         film2.setReleaseDate(LocalDate.now().minusDays(4));
 
         filmController.create(film2);
@@ -97,7 +96,7 @@ public class FilmControllerTest {
 
         film1.setName("run");
         film1.setDescription("run on the forest");
-        film1.setDuration(Duration.ofMinutes(123));
+        film1.setDuration(123);
         film1.setReleaseDate(LocalDate.now().minusDays(2));
 
         filmController.create(film1);
@@ -107,7 +106,7 @@ public class FilmControllerTest {
         film2.setId(1L);
         film2.setName("out");
         film2.setDescription("on the forest");
-        film2.setDuration(Duration.ofMinutes(123));
+        film2.setDuration(123);
         film2.setReleaseDate(LocalDate.now().minusDays(4));
 
         assertEquals("on the forest", filmController.update(film2).getDescription());
