@@ -50,29 +50,14 @@ public class UserController {
     public User update(@RequestBody User newUser) {
         log.info("обновление данных пользователя id: {}", newUser.getId());
 
-        if (newUser.getId() == null) {
-            log.error("ошибка: id не указан");
-            throw new ConditionsNotMetException("Id должен быть указан");
-        }
-
-        checkEmail(newUser);
-
         if (users.containsKey(newUser.getId())) {
+            checkEmail(newUser);
+
             User oldUser = users.get(newUser.getId());
 
             if (newUser.getLogin() != null || newUser.getBirthday().isBefore(LocalDate.now())) {
-                if (newUser.getName() == null) {
-                    oldUser.setName(newUser.getLogin());
-                } else {
-                    oldUser.setName(newUser.getName());
-                }
 
-                oldUser.setEmail(newUser.getEmail());
-                oldUser.setLogin(newUser.getLogin());
-                oldUser.setBirthday(newUser.getBirthday());
-
-                log.info("успешное обновление данных пользователя id: {}", oldUser.getId());
-                return oldUser;
+                return changingOldDataToNewOnes(oldUser, newUser);
             }
             log.error("ошибка: некорректные данные id: {}", oldUser.getId());
             throw new ConditionsNotMetException("Некорректные данные");
@@ -99,6 +84,21 @@ public class UserController {
             log.error("ошибка: email не указан либо некорректно введен");
             throw new ConditionsNotMetException("Email не указан либо некорректно введен");
         }
+    }
+
+    private User changingOldDataToNewOnes(User oldUser, User newUser) {
+        if (newUser.getName() == null) {
+            oldUser.setName(newUser.getLogin());
+        } else {
+            oldUser.setName(newUser.getName());
+        }
+
+        oldUser.setEmail(newUser.getEmail());
+        oldUser.setLogin(newUser.getLogin());
+        oldUser.setBirthday(newUser.getBirthday());
+
+        log.info("успешное обновление данных пользователя id: {}", oldUser.getId());
+        return oldUser;
     }
 }
 
