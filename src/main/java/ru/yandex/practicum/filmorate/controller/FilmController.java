@@ -27,43 +27,58 @@ public class FilmController {
 
     @PostMapping
     public Film create(@RequestBody Film film) {
-        log.info("регистрация нового фильма id: {}", film.getId());
+        log.info("регистрация нового фильма");
 
-        checkTitle(film);
+        validateCreate(film);
 
-        if ((film.getDescription().length() < 200) && (film.getReleaseDate().isAfter(beginning))
-                && (film.getDuration() > 0)) {
+        film.setId(getNextId());
+        films.put(film.getId(), film);
 
-            film.setId(getNextId());
-
-            films.put(film.getId(), film);
-            log.info("успешное создание фильма id: {}", film.getId());
-            return film;
-        }
-        log.error("ошибка: условия регистрации фильма не выполнены id: {}", film.getId());
-        throw new ConditionsNotMetException("Не выполнены условия для регистрации фильма в приложении");
+        log.info("успешное создание фильма id: {}", film.getId());
+        return film;
     }
 
     @PutMapping
     public Film update(@RequestBody Film newFilm) {
         log.info("обновление данных фильма id: {}", newFilm.getId());
 
-        if (films.containsKey(newFilm.getId())) {
+        validateUpdate(newFilm);
+        Film oldFilm = changingOldDataToNewOnes(newFilm);
 
-            if (newFilm.getId() == null) {
+        log.info("успешное обновление данных о фильме id: {}", oldFilm.getId());
+        return oldFilm;
+    }
+
+    private void validateCreate(Film film) {
+        checkTitle(film);
+
+        if ((film.getDescription().length() < 200) && (film.getReleaseDate().isAfter(beginning))
+                && (film.getDuration() > 0)) {
+
+            return;
+        }
+
+        log.error("ошибка: условия регистрации фильма не выполнены id: {}", film.getId());
+        throw new ConditionsNotMetException("Не выполнены условия для регистрации фильма в приложении");
+    }
+
+    private void validateUpdate(Film film) {
+        if (films.containsKey(film.getId())) {
+
+            if (film.getId() == null) {
                 throw new ConditionsNotMetException("Id должен быть указан");
             }
 
-            checkTitle(newFilm);
+            checkTitle(film);
 
-            if ((newFilm.getDescription().length() < 200)
-                    && newFilm.getReleaseDate().isAfter(beginning) && (newFilm.getDuration() > 0)) {
+            if ((film.getDescription().length() < 200)
+                    && film.getReleaseDate().isAfter(beginning) && (film.getDuration() > 0)) {
 
-                return changingOldDataToNewOnes(newFilm);
+                return;
             }
         }
-        log.error("ошибка: фильм с id = {} не найден", newFilm.getId());
-        throw new NotFoundException("Фильм с id = " + newFilm.getId() + " не найден");
+        log.error("ошибка: фильм с id = {} не найден", film.getId());
+        throw new NotFoundException("Фильм с id = " + film.getId() + " не найден");
     }
 
     private void checkTitle(Film film) {
@@ -80,7 +95,6 @@ public class FilmController {
         oldFilm.setName(newFilm.getName());
         oldFilm.setReleaseDate(newFilm.getReleaseDate());
 
-        log.info("успешное обновление данных о фильме id: {}", oldFilm.getId());
         return oldFilm;
     }
 
