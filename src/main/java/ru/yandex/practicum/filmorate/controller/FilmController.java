@@ -57,7 +57,6 @@ public class FilmController {
 
             return;
         }
-
         log.error("ошибка: условия регистрации фильма не выполнены id: {}", film.getId());
         throw new ConditionsNotMetException("Не выполнены условия для регистрации фильма в приложении");
     }
