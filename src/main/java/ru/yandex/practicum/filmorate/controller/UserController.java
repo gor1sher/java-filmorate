@@ -44,7 +44,7 @@ public class UserController {
     public User update(@RequestBody User newUser) {
         log.info("обновление данных пользователя id: {}", newUser.getId());
 
-        validateUodate(newUser);
+        validateUpdate(newUser);
         User oldUser = changingOldDataToNewOnes(newUser);
 
         log.info("успешное обновление данных пользователя id: {}", oldUser.getId());
@@ -74,7 +74,7 @@ public class UserController {
         throw new ConditionsNotMetException("Не выполнены условия для регистрации пользователя");
     }
 
-    private void validateUodate(User user) {
+    private void validateUpdate(User user) {
         if (users.containsKey(user.getId())) {
             checkEmail(user);
 
