@@ -23,8 +23,8 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.values();
     }
 
-    public Film filmByIdentifier(Long filmId){
-        if(films.containsKey(filmId)){
+    public Film filmByIdentifier(Long filmId) {
+        if (films.containsKey(filmId)) {
             return films.get(filmId);
         } else {
             throw new NotFoundException("Указан неверный идентификатор");
@@ -55,7 +55,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     }
 
-    public List<Film> filmList(){
+    public List<Film> filmList() {
         return (List<Film>) films.values();
     }
 

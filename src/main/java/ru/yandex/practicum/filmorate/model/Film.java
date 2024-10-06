@@ -14,15 +14,15 @@ public class Film {
     private int duration;
     private ArrayList<User> usersLikesFilm;
 
-    public void addLikeTheFilm(User user){
+    public void addLikeTheFilm(User user) {
         usersLikesFilm.add(user);
     }
 
-    public void removeLikeTheFilm(User user){
+    public void removeLikeTheFilm(User user) {
         usersLikesFilm.remove(user);
     }
 
-    public int countLikes(){
+    public int countLikes() {
         return usersLikesFilm.size();
     }
 }

@@ -13,19 +13,19 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handlerNotFoundException(final NotFoundException e){
+    public ErrorResponse handlerNotFoundException(final NotFoundException e) {
         return new ErrorResponse("error", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerConditionsNotMetException(final ConditionsNotMetException e){
+    public ErrorResponse handlerConditionsNotMetException(final ConditionsNotMetException e) {
         return new ErrorResponse("error", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handlerThrowable(final Throwable e){
+    public ErrorResponse handlerThrowable(final Throwable e) {
         return new ErrorResponse("error", e.getMessage());
     }
 }

@@ -14,21 +14,21 @@ public class FilmService {
     InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
-    public void userLikeFilm(Long filmId, Long userId){
+    public void userLikeFilm(Long filmId, Long userId) {
         Film film = inMemoryFilmStorage.filmByIdentifier(filmId);
         User user = inMemoryUserStorage.userByIdentifier(userId);
 
         film.addLikeTheFilm(user);
     }
 
-    public void removeUserLikeFilm(Long filmId, Long userId){
+    public void removeUserLikeFilm(Long filmId, Long userId) {
         Film film = inMemoryFilmStorage.filmByIdentifier(filmId);
         User user = inMemoryUserStorage.userByIdentifier(userId);
 
         film.removeLikeTheFilm(user);
     }
 
-    public List<Film> listOfPopularFilms(int count){
+    public List<Film> listOfPopularFilms(int count) {
         return inMemoryFilmStorage.filmList().stream()
                 .sorted(Comparator.comparingInt(Film::countLikes).reversed())
                 .limit(count)

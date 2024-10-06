@@ -24,14 +24,14 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film filmByIdentifier(@RequestParam Long id){
+    public Film filmByIdentifier(@RequestParam Long id) {
         log.info("получение фильма по идентификатору id: {}", id);
 
         return inMemoryFilmStorage.filmByIdentifier(id);
     }
 
     @GetMapping("/popular?count={count}")
-    public List<Film> popularFilms(@RequestParam(defaultValue = "10") int count){
+    public List<Film> popularFilms(@RequestParam(defaultValue = "10") int count) {
         return filmService.listOfPopularFilms(count);
     }
 
@@ -56,12 +56,12 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void userLikesTheFilm(@RequestParam Long id, @RequestParam Long userId){
+    public void userLikesTheFilm(@RequestParam Long id, @RequestParam Long userId) {
         filmService.userLikeFilm(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void removeUserLikeTheFilm(@RequestParam Long id, @RequestParam Long userId){
+    public void removeUserLikeTheFilm(@RequestParam Long id, @RequestParam Long userId) {
         filmService.removeUserLikeFilm(id, userId);
     }
 }

@@ -14,11 +14,11 @@ public class User {
     private LocalDate birthday;
     private ArrayList<User> friends;
 
-    public void addFriend(User user){
+    public void addFriend(User user) {
         friends.add(user);
     }
 
-    public void removeFriend(User user){
+    public void removeFriend(User user) {
         friends.remove(user);
     }
 }

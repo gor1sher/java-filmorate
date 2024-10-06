@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Long, User> users = new HashMap<>();
 
@@ -21,7 +21,7 @@ public class InMemoryUserStorage implements UserStorage{
         return users.values();
     }
 
-    public User userByIdentifier(Long userId){
+    public User userByIdentifier(Long userId) {
         checkIdentifier(userId);
         return users.get(userId);
     }
@@ -50,7 +50,7 @@ public class InMemoryUserStorage implements UserStorage{
 
     }
 
-    public void checkIdentifier(Long userId){
+    public void checkIdentifier(Long userId) {
         User user = users.get(userId);
         if (user == null) {
             throw new NotFoundException("Указан неверный идентификатор");
@@ -83,7 +83,7 @@ public class InMemoryUserStorage implements UserStorage{
         checkingObjectCriteria(user);
     }
 
-    private void checkingObjectCriteria(User user){
+    private void checkingObjectCriteria(User user) {
         if (!user.getBirthday().isBefore(LocalDate.now())
                 && (user.getLogin() == null)) {
 
