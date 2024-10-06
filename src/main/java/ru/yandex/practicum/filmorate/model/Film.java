@@ -15,7 +15,7 @@ public class Film {
     private ArrayList<User> usersLikesFilm;
 
     public void addLikeTheFilm(User user) {
-        usersLikesFilm.add(user);
+        this.usersLikesFilm.add(user);
     }
 
     public void removeLikeTheFilm(User user) {

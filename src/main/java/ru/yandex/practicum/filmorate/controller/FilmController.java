@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,8 +16,11 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
-    FilmService filmService = new FilmService();
+    @Autowired
+    InMemoryFilmStorage inMemoryFilmStorage;
+
+    @Autowired
+    FilmService filmService;
 
     @GetMapping
     public Collection<Film> findAll() {
@@ -24,14 +29,14 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film filmByIdentifier(@RequestParam Long id) {
+    public Film filmByIdentifier(@PathVariable(name = "id") Long id) {
         log.info("получение фильма по идентификатору id: {}", id);
 
         return inMemoryFilmStorage.filmByIdentifier(id);
     }
 
-    @GetMapping("/popular?count={count}")
-    public List<Film> popularFilms(@RequestParam(defaultValue = "10") int count) {
+    @GetMapping("/popular")
+    public List<Film> popularFilms(@RequestParam(defaultValue = "10", name = "count") int count) {
         return filmService.listOfPopularFilms(count);
     }
 
@@ -56,12 +61,12 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void userLikesTheFilm(@RequestParam Long id, @RequestParam Long userId) {
+    public void userLikesTheFilm(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId) {
         filmService.userLikeFilm(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void removeUserLikeTheFilm(@RequestParam Long id, @RequestParam Long userId) {
+    public void removeUserLikeTheFilm(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId) {
         filmService.removeUserLikeFilm(id, userId);
     }
 }

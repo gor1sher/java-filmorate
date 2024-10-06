@@ -12,13 +12,13 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-    private ArrayList<User> friends;
+    private ArrayList<Long> friends;
 
     public void addFriend(User user) {
-        friends.add(user);
+        friends.add(user.getId());
     }
 
     public void removeFriend(User user) {
-        friends.remove(user);
+        friends.remove(user.getId());
     }
 }

@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class InMemoryUserStorage implements UserStorage {
             user.setName(user.getLogin());
         }
         user.setId(getNextId());
+        user.setFriends(new ArrayList<>());
         users.put(user.getId(), user);
 
         return user;
@@ -84,8 +86,8 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     private void checkingObjectCriteria(User user) {
-        if (!user.getBirthday().isBefore(LocalDate.now())
-                && (user.getLogin() == null)) {
+        if (user.getBirthday().isAfter(LocalDate.now())
+                || (user.getLogin() == null)) {
 
             log.error("ошибка: данные регистрации пользователя неверные id: {}", user.getId());
             throw new ConditionsNotMetException("Не выполнены условия для регистрации пользователя");

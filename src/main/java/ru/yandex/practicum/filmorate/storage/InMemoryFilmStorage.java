@@ -7,10 +7,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -36,6 +33,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         validateCreate(film);
 
         film.setId(getNextId());
+        film.setUsersLikesFilm(new ArrayList<>());
         films.put(film.getId(), film);
 
         return film;
@@ -56,7 +54,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public List<Film> filmList() {
-        return (List<Film>) films.values();
+        return films.values().stream().toList();
     }
 
     private void validateCreate(Film film) {
@@ -79,8 +77,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     private void checkingObjectCriteria(Film film) {
-        if ((film.getDescription().length() < 200)
-                && film.getReleaseDate().isAfter(beginning) && (film.getDuration() > 0)) {
+        if ((film.getDescription().length() > 200)
+                || film.getReleaseDate().isBefore(beginning) || (film.getDuration() < 0)) {
 
             log.error("ошибка: условия регистрации фильма не выполнены id: {}", film.getId());
             throw new ConditionsNotMetException("Не выполнены условия для регистрации фильма в приложении");
