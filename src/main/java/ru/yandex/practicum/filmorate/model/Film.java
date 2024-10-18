@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Set;
 
 @Data
 public class Film {
@@ -12,17 +13,9 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private ArrayList<User> usersLikesFilm;
+    private Set<Long> listLikes;
 
-    public void addLikeTheFilm(User user) {
-        this.usersLikesFilm.add(user);
-    }
-
-    public void removeLikeTheFilm(User user) {
-        usersLikesFilm.remove(user);
-    }
-
-    public int countLikes() {
-        return usersLikesFilm.size();
+    public void setListLikes(ArrayList<Long> listLikes) {
+        this.listLikes = (Set<Long>) listLikes;
     }
 }

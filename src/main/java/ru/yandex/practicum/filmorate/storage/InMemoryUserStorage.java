@@ -2,11 +2,9 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,13 +27,11 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User create(User user) {
-        validateCreate(user);
-
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }
         user.setId(getNextId());
-        user.setFriends(new ArrayList<>());
+        user.setListFriends(new ArrayList<>());
         users.put(user.getId(), user);
 
         return user;
@@ -43,13 +39,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User update(User newUser) {
-        validateUpdate(newUser);
-        return changingOldDataToNewOnes(newUser);
-    }
-
-    @Override
-    public void remove(User user) {
-
+        return replaceOldData(newUser);
     }
 
     public void checkIdentifier(Long userId) {
@@ -70,40 +60,14 @@ public class InMemoryUserStorage implements UserStorage {
         return nextId;
     }
 
-    private void validateCreate(User user) {
-        checkEmail(user);
-        checkingObjectCriteria(user);
-    }
-
-    private void validateUpdate(User user) {
+    public void checkingUserInStorage(User user) {
         if (!users.containsKey(user.getId())) {
             log.error("ошибка: пользователь не найден id: {}", user.getId());
             throw new NotFoundException("Пользователь не найден");
         }
-
-        checkEmail(user);
-        checkingObjectCriteria(user);
     }
 
-    private void checkingObjectCriteria(User user) {
-        if (user.getBirthday().isAfter(LocalDate.now())
-                || (user.getLogin() == null)) {
-
-            log.error("ошибка: данные регистрации пользователя неверные id: {}", user.getId());
-            throw new ConditionsNotMetException("Не выполнены условия для регистрации пользователя");
-        }
-    }
-
-    private void checkEmail(User user) {
-        if ((user.getEmail() == null || user.getEmail().isBlank())
-                || (!user.getEmail().contains("@"))) {
-
-            log.error("ошибка: email не указан либо некорректно введен");
-            throw new ConditionsNotMetException("Email не указан либо некорректно введен");
-        }
-    }
-
-    private User changingOldDataToNewOnes(User newUser) {
+    private User replaceOldData(User newUser) {
         User oldUser = users.get(newUser.getId());
 
         if (newUser.getName() == null) {

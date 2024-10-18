@@ -1,45 +1,74 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FilmService {
 
-    InMemoryFilmStorage inMemoryFilmStorage;
-    InMemoryUserStorage inMemoryUserStorage;
+    @NonNull
+    private InMemoryFilmStorage inMemoryFilmStorage;
 
-    @Autowired
-    public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    @NonNull
+    private InMemoryUserStorage inMemoryUserStorage;
+
+    public Collection<Film> findAll() {
+        return inMemoryFilmStorage.findAll();
     }
 
-    public void userLikeFilm(Long filmId, Long userId) {
-        Film film = inMemoryFilmStorage.filmByIdentifier(filmId);
-        User user = inMemoryUserStorage.userByIdentifier(userId);
-
-        film.addLikeTheFilm(user);
+    public Film filmById(Long id) {
+        return inMemoryFilmStorage.filmById(id);
     }
 
-    public void removeUserLikeFilm(Long filmId, Long userId) {
-        Film film = inMemoryFilmStorage.filmByIdentifier(filmId);
-        User user = inMemoryUserStorage.userByIdentifier(userId);
-
-        film.removeLikeTheFilm(user);
+    public Film create(Film newFilm) {
+        newFilm.setListLikes(new ArrayList<>());
+        return inMemoryFilmStorage.create(newFilm);
     }
 
-    public List<Film> listOfPopularFilms(int count) {
-        return inMemoryFilmStorage.filmList().stream()
-                .sorted(Comparator.comparingInt(Film::countLikes).reversed())
+    public Film update(Film newFilm) {
+        return inMemoryFilmStorage.update(newFilm);
+    }
+
+    public void addLike(Long filmId, Long userId) {
+        Film film = inMemoryFilmStorage.filmById(filmId);
+        inMemoryUserStorage.checkIdentifier(userId);
+
+        List<Long> likes = (List<Long>) film.getListLikes();
+        likes.add(userId);
+        film.setListLikes((ArrayList<Long>) likes);
+    }
+
+    public void removeLike(Long filmId, Long userId) {
+        Film film = inMemoryFilmStorage.filmById(filmId);
+        inMemoryUserStorage.checkIdentifier(userId);
+
+        List<Long> likes = (List<Long>) film.getListLikes();
+        likes.remove(userId);
+        film.setListLikes((ArrayList<Long>) likes);
+    }
+
+    public int getLength(Film film) {
+        return film.getListLikes().size();
+    }
+
+    public void checkingFilmInStorage(Film film) {
+        inMemoryFilmStorage.checkingFilmInStorage(film);
+    }
+
+    public List<Film> getListOfPopularFilms(int count) {
+        return inMemoryFilmStorage.getListFilms().stream()
+                .sorted(Comparator.comparingInt(film -> getLength((Film) film)).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
     }

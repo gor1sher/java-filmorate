@@ -2,25 +2,25 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
-    private final LocalDate beginning = LocalDate.of(1895, 12, 28);
     private final Map<Long, Film> films = new HashMap<>();
 
     public Collection<Film> findAll() {
         return films.values();
     }
 
-    public Film filmByIdentifier(Long filmId) {
+    public Film filmById(Long filmId) {
         if (films.containsKey(filmId)) {
             return films.get(filmId);
         } else {
@@ -30,10 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        validateCreate(film);
-
         film.setId(getNextId());
-        film.setUsersLikesFilm(new ArrayList<>());
         films.put(film.getId(), film);
 
         return film;
@@ -41,58 +38,16 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film update(Film newFilm) {
-
-        validateUpdate(newFilm);
-        Film oldFilm = changingOldDataToNewOnes(newFilm);
+        Film oldFilm = replaceOldData(newFilm);
 
         return oldFilm;
     }
 
-    @Override
-    public void remove(Film film) {
-
-    }
-
-    public List<Film> filmList() {
+    public List<Film> getListFilms() {
         return films.values().stream().toList();
     }
 
-    private void validateCreate(Film film) {
-        checkTitle(film);
-        checkingObjectCriteria(film);
-    }
-
-    private void validateUpdate(Film film) {
-        if (!films.containsKey(film.getId())) {
-            log.error("ошибка: фильм с id = {} не найден", film.getId());
-            throw new NotFoundException("Фильм с id = " + film.getId() + " не найден");
-        }
-
-        if (film.getId() == null) {
-            throw new ConditionsNotMetException("Id должен быть указан");
-        }
-
-        checkTitle(film);
-        checkingObjectCriteria(film);
-    }
-
-    private void checkingObjectCriteria(Film film) {
-        if ((film.getDescription().length() > 200)
-                || film.getReleaseDate().isBefore(beginning) || (film.getDuration() < 0)) {
-
-            log.error("ошибка: условия регистрации фильма не выполнены id: {}", film.getId());
-            throw new ConditionsNotMetException("Не выполнены условия для регистрации фильма в приложении");
-        }
-    }
-
-    private void checkTitle(Film film) {
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.error("ошибка: название фильма не указано");
-            throw new ConditionsNotMetException("Название фильма не может быть пустым");
-        }
-    }
-
-    private Film changingOldDataToNewOnes(Film newFilm) {
+    private Film replaceOldData(Film newFilm) {
         Film oldFilm = films.get(newFilm.getId());
         oldFilm.setDescription(newFilm.getDescription());
         oldFilm.setDuration(newFilm.getDuration());
@@ -100,6 +55,13 @@ public class InMemoryFilmStorage implements FilmStorage {
         oldFilm.setReleaseDate(newFilm.getReleaseDate());
 
         return oldFilm;
+    }
+
+    public void checkingFilmInStorage(Film film) {
+        if (!films.containsKey(film.getId())) {
+            log.error("ошибка: фильм с id = {} не найден", film.getId());
+            throw new NotFoundException("Фильм с id = " + film.getId() + " не найден");
+        }
     }
 
     private long getNextId() {

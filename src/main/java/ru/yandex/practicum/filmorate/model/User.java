@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Set;
 
 @Data
 public class User {
@@ -12,13 +13,9 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-    private ArrayList<Long> friends;
+    private Set<Long> listFriends;
 
-    public void addFriend(User user) {
-        friends.add(user.getId());
-    }
-
-    public void removeFriend(User user) {
-        friends.remove(user.getId());
+    public void setListFriends(ArrayList<Long> listFriends) {
+        this.listFriends = (Set<Long>) listFriends;
     }
 }
