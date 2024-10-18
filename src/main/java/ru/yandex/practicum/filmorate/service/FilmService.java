@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,18 +42,18 @@ public class FilmService {
         Film film = inMemoryFilmStorage.filmById(filmId);
         inMemoryUserStorage.checkIdentifier(userId);
 
-        List<Long> likes = (List<Long>) film.getListLikes();
+        List<Long> likes = film.getListLikes();
         likes.add(userId);
-        film.setListLikes((Set<Long>) likes);
+        film.setListLikes(likes);
     }
 
     public void removeLike(Long filmId, Long userId) {
         Film film = inMemoryFilmStorage.filmById(filmId);
         inMemoryUserStorage.checkIdentifier(userId);
 
-        List<Long> likes = (List<Long>) film.getListLikes();
+        List<Long> likes = film.getListLikes();
         likes.remove(userId);
-        film.setListLikes((Set<Long>) likes);
+        film.setListLikes(likes);
     }
 
     public int getLength(Film film) {

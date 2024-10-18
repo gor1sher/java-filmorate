@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,25 +41,25 @@ public class UserService {
     public void addFriend(Long userId, Long friendId) {
         List<User> userList = checkAndGetUserById(userId, friendId);
 
-        List<Long> userFriends = (List<Long>) userList.get(0).getListFriends();
+        List<Long> userFriends = userList.get(0).getListFriends();
         userFriends.add(userList.get(1).getId());
-        userList.get(0).setListFriends((Set<Long>) userFriends);
+        userList.get(0).setListFriends(userFriends);
 
-        List<Long> userFriends1 = (List<Long>) userList.get(1).getListFriends();
+        List<Long> userFriends1 = userList.get(1).getListFriends();
         userFriends1.add(userList.get(0).getId());
-        userList.get(1).setListFriends((Set<Long>) userFriends1);
+        userList.get(1).setListFriends(userFriends1);
     }
 
     public void removeFriend(Long userId, Long friendId) {
         List<User> userList = checkAndGetUserById(userId, friendId);
 
-        List<Long> userFriends = (List<Long>) userList.get(0).getListFriends();
+        List<Long> userFriends = userList.get(0).getListFriends();
         userFriends.remove(userList.get(1).getId());
-        userList.get(0).setListFriends((Set<Long>) userFriends);
+        userList.get(0).setListFriends(userFriends);
 
-        List<Long> userFriends1 = (List<Long>) userList.get(1).getListFriends();
+        List<Long> userFriends1 = userList.get(1).getListFriends();
         userFriends1.remove(userList.get(0).getId());
-        userList.get(1).setListFriends((Set<Long>) userFriends1);
+        userList.get(1).setListFriends(userFriends1);
     }
 
     public List<User> getUserFriend(Long id) {
