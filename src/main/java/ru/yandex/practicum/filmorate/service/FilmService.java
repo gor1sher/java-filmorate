@@ -7,10 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +29,6 @@ public class FilmService {
     }
 
     public Film create(Film newFilm) {
-        newFilm.setListLikes(new ArrayList<>());
         return inMemoryFilmStorage.create(newFilm);
     }
 
@@ -46,7 +42,7 @@ public class FilmService {
 
         List<Long> likes = (List<Long>) film.getListLikes();
         likes.add(userId);
-        film.setListLikes((ArrayList<Long>) likes);
+        film.setListLikes((Set<Long>) likes);
     }
 
     public void removeLike(Long filmId, Long userId) {
@@ -55,7 +51,7 @@ public class FilmService {
 
         List<Long> likes = (List<Long>) film.getListLikes();
         likes.remove(userId);
-        film.setListLikes((ArrayList<Long>) likes);
+        film.setListLikes((Set<Long>) likes);
     }
 
     public int getLength(Film film) {

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -13,9 +14,5 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-    private Set<Long> listFriends;
-
-    public void setListFriends(ArrayList<Long> listFriends) {
-        this.listFriends = (Set<Long>) listFriends;
-    }
+    private Set<Long> listFriends = new HashSet<>();
 }

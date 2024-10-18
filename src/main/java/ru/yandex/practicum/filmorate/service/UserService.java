@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,11 +41,11 @@ public class UserService {
 
         List<Long> userFriends = (List<Long>) userList.get(0).getListFriends();
         userFriends.add(userList.get(1).getId());
-        userList.get(0).setListFriends((ArrayList<Long>) userFriends);
+        userList.get(0).setListFriends((Set<Long>) userFriends);
 
         List<Long> userFriends1 = (List<Long>) userList.get(1).getListFriends();
         userFriends1.add(userList.get(0).getId());
-        userList.get(1).setListFriends((ArrayList<Long>) userFriends1);
+        userList.get(1).setListFriends((Set<Long>) userFriends1);
     }
 
     public void removeFriend(Long userId, Long friendId) {
@@ -56,11 +53,11 @@ public class UserService {
 
         List<Long> userFriends = (List<Long>) userList.get(0).getListFriends();
         userFriends.remove(userList.get(1).getId());
-        userList.get(0).setListFriends((ArrayList<Long>) userFriends);
+        userList.get(0).setListFriends((Set<Long>) userFriends);
 
         List<Long> userFriends1 = (List<Long>) userList.get(1).getListFriends();
         userFriends1.remove(userList.get(0).getId());
-        userList.get(1).setListFriends((ArrayList<Long>) userFriends1);
+        userList.get(1).setListFriends((Set<Long>) userFriends1);
     }
 
     public List<User> getUserFriend(Long id) {
