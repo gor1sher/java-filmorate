@@ -14,6 +14,4 @@ public class Film {
     private LocalDate releaseDate;
     private int duration;
     private List<Long> likeList = new ArrayList<>();
-    private Genre genre;
-    private MpaRating mpaRating;
 }
