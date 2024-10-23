@@ -1,38 +1,52 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
 
     private final LocalDate beginning = LocalDate.of(1895, 12, 28);
-    private final Map<Long, Film> films = new HashMap<>();
+
+    @Autowired
+    protected FilmService filmService;
 
     @GetMapping
     public Collection<Film> findAll() {
         log.info("получение всех фильмов");
-        return films.values();
+        return filmService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Film filmById(@PathVariable(name = "id") Long id) {
+        log.info("получение фильма по идентификатору id: {}", id);
+
+        return filmService.filmById(id);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> popularFilms(@RequestParam(defaultValue = "10", name = "count") int count) {
+        return filmService.getListOfPopularFilms(count);
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public Film create(@RequestBody Film newFilm) {
         log.info("регистрация нового фильма");
 
-        validateCreate(film);
-
-        film.setId(getNextId());
-        films.put(film.getId(), film);
+        validateFilmCreation(newFilm);
+        Film film = filmService.create(newFilm);
 
         log.info("успешное создание фильма id: {}", film.getId());
         return film;
@@ -43,41 +57,31 @@ public class FilmController {
         log.info("обновление данных фильма id: {}", newFilm.getId());
 
         validateUpdate(newFilm);
-        Film oldFilm = changingOldDataToNewOnes(newFilm);
+        Film film = filmService.update(newFilm);
 
-        log.info("успешное обновление данных о фильме id: {}", oldFilm.getId());
-        return oldFilm;
+        log.info("успешное обновление данных о фильме id: {}", film.getId());
+        return film;
     }
 
-    private void validateCreate(Film film) {
-        checkTitle(film);
+    @PutMapping("/{id}/like/{userId}")
+    public void userLikesTheFilm(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId) {
+        filmService.addLike(id, userId);
+    }
 
-        if ((film.getDescription().length() < 200) && (film.getReleaseDate().isAfter(beginning))
-                && (film.getDuration() > 0)) {
-
-            return;
-        }
-        log.error("ошибка: условия регистрации фильма не выполнены id: {}", film.getId());
-        throw new ConditionsNotMetException("Не выполнены условия для регистрации фильма в приложении");
+    @DeleteMapping("/{id}/like/{userId}")
+    public void removeUserLikeTheFilm(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId) {
+        filmService.removeLike(id, userId);
     }
 
     private void validateUpdate(Film film) {
-        if (films.containsKey(film.getId())) {
+        filmService.checkingFilmInStorage(film);
 
-            if (film.getId() == null) {
-                throw new ConditionsNotMetException("Id должен быть указан");
-            }
-
-            checkTitle(film);
-
-            if ((film.getDescription().length() < 200)
-                    && film.getReleaseDate().isAfter(beginning) && (film.getDuration() > 0)) {
-
-                return;
-            }
+        if (film.getId() == null) {
+            throw new ConditionsNotMetException("Id должен быть указан");
         }
-        log.error("ошибка: фильм с id = {} не найден", film.getId());
-        throw new NotFoundException("Фильм с id = " + film.getId() + " не найден");
+
+        checkTitle(film);
+        validateObjectCriteria(film);
     }
 
     private void checkTitle(Film film) {
@@ -87,24 +91,17 @@ public class FilmController {
         }
     }
 
-    private Film changingOldDataToNewOnes(Film newFilm) {
-        Film oldFilm = films.get(newFilm.getId());
-        oldFilm.setDescription(newFilm.getDescription());
-        oldFilm.setDuration(newFilm.getDuration());
-        oldFilm.setName(newFilm.getName());
-        oldFilm.setReleaseDate(newFilm.getReleaseDate());
+    private void validateObjectCriteria(Film film) {
+        if ((film.getDescription().length() > 200)
+                || film.getReleaseDate().isBefore(beginning) || (film.getDuration() < 0)) {
 
-        return oldFilm;
+            log.error("ошибка: условия регистрации фильма не выполнены id: {}", film.getId());
+            throw new ConditionsNotMetException("Не выполнены условия для регистрации фильма в приложении");
+        }
     }
 
-    private long getNextId() {
-        long currentMaxId = films.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        long nextId = ++currentMaxId;
-        log.info("создание нового id: {}", nextId);
-        return nextId;
+    private void validateFilmCreation(Film film) {
+        checkTitle(film);
+        validateObjectCriteria(film);
     }
 }

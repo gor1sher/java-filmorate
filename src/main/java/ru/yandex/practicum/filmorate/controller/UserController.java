@@ -1,40 +1,55 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
-    private final Map<Long, User> users = new HashMap<>();
+    @Autowired
+    protected UserService userService;
 
     @GetMapping
     public Collection<User> findAll() {
         log.info("получение всех пользователей");
-        return users.values();
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public User userById(@PathVariable(name = "id") Long id) {
+        log.info("получение фильма по идентификатору id: {}", id);
+
+        return userService.userByIdentifier(id);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> listОfAllUserFriends(@PathVariable(name = "id") Long id) {
+        return userService.getUserFriend(id);
+    }
+
+    @GetMapping("{id}/friends/common/{otherId}")
+    public List<User> listOfCommonFriends(@PathVariable(name = "id") Long id, @PathVariable(name = "otherId") Long otherId) {
+        return userService.commonOfFriends(id, otherId);
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
-        log.info("занесение пользователя id: {}", user.getId());
+    public User create(@RequestBody User newUser) {
+        log.info("занесение пользователя");
 
-        validateCreate(user);
-
-        if (user.getName() == null) {
-            user.setName(user.getLogin());
-        }
-        user.setId(getNextId());
-        users.put(user.getId(), user);
+        validateUserCreation(newUser);
+        User user = userService.create(newUser);
 
         log.info("успешное создание пользователя id: {}", user.getId());
         return user;
@@ -45,47 +60,44 @@ public class UserController {
         log.info("обновление данных пользователя id: {}", newUser.getId());
 
         validateUpdate(newUser);
-        User oldUser = changingOldDataToNewOnes(newUser);
+        User user = userService.update(newUser);
 
-        log.info("успешное обновление данных пользователя id: {}", oldUser.getId());
-        return oldUser;
+        log.info("успешное обновление данных пользователя id: {}", user.getId());
+        return user;
     }
 
-    private long getNextId() {
-        long currentMaxId = users.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        long nextId = ++currentMaxId;
-        log.info("создание нового id: {}", nextId);
-        return nextId;
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId) {
+        log.info("добавление друга к пользователю id: {}", id);
+
+        userService.addFriend(id, friendId);
+
+        log.info("успешное добавление друга к пользователю id: {}", id);
     }
 
-    private void validateCreate(User user) {
-        checkEmail(user);
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId) {
+        log.info("удаление друга у пользователя id: {}", id);
 
-        if (user.getBirthday().isBefore(LocalDate.now())
-                && ((user.getLogin() != null))) {
+        userService.removeFriend(id, friendId);
 
-            return;
-        }
-        log.error("ошибка: данные регистрации пользователя неверные id: {}", user.getId());
-        throw new ConditionsNotMetException("Не выполнены условия для регистрации пользователя");
+        log.info("успешное удаление друга у пользователю id: {}", id);
     }
 
     private void validateUpdate(User user) {
-        if (users.containsKey(user.getId())) {
-            checkEmail(user);
+        userService.checkingUserInStorage(user);
 
-            if (user.getLogin() != null || user.getBirthday().isBefore(LocalDate.now())) {
-                return;
-            }
-            log.error("ошибка: некорректные данные id: {}", user.getId());
-            throw new ConditionsNotMetException("Некорректные данные");
+        checkEmail(user);
+        validateUserCriteria(user);
+    }
+
+    private void validateUserCriteria(User user) {
+        if (user.getBirthday().isAfter(LocalDate.now())
+                || (user.getLogin() == null)) {
+
+            log.error("ошибка: данные регистрации пользователя неверные id: {}", user.getId());
+            throw new ConditionsNotMetException("Не выполнены условия для регистрации пользователя");
         }
-        log.error("ошибка: пользователь не найден id: {}", user.getId());
-        throw new NotFoundException("Пользователь не найден");
     }
 
     private void checkEmail(User user) {
@@ -97,20 +109,9 @@ public class UserController {
         }
     }
 
-    private User changingOldDataToNewOnes(User newUser) {
-        User oldUser = users.get(newUser.getId());
-
-        if (newUser.getName() == null) {
-            oldUser.setName(newUser.getLogin());
-        } else {
-            oldUser.setName(newUser.getName());
-        }
-
-        oldUser.setEmail(newUser.getEmail());
-        oldUser.setLogin(newUser.getLogin());
-        oldUser.setBirthday(newUser.getBirthday());
-
-        return oldUser;
+    private void validateUserCreation(User user) {
+        checkEmail(user);
+        validateUserCriteria(user);
     }
 }
 
