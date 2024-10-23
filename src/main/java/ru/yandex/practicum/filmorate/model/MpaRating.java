@@ -6,4 +6,4 @@ public enum MpaRating {
     PG_13,
     R,
     NC_17
-};
+}
