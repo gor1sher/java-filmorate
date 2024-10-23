@@ -20,7 +20,6 @@ public class FilmController {
 
     private final LocalDate beginning = LocalDate.of(1895, 12, 28);
 
-    @NonNull
     protected FilmService filmService;
 
     @GetMapping

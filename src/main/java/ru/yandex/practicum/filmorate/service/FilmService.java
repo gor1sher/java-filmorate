@@ -4,8 +4,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 public class FilmService {
 
     @NonNull
-    private InMemoryFilmStorage inMemoryFilmStorage;
+    private FilmStorage inMemoryFilmStorage;
 
     @NonNull
-    private InMemoryUserStorage inMemoryUserStorage;
+    private UserStorage inMemoryUserStorage;
 
     public Collection<Film> findAll() {
         return inMemoryFilmStorage.findAll();
@@ -42,22 +42,22 @@ public class FilmService {
         Film film = inMemoryFilmStorage.filmById(filmId);
         inMemoryUserStorage.checkIdentifier(userId);
 
-        List<Long> likes = film.getListLikes();
+        List<Long> likes = film.getLikeList();
         likes.add(userId);
-        film.setListLikes(likes);
+        film.setLikeList(likes);
     }
 
     public void removeLike(Long filmId, Long userId) {
         Film film = inMemoryFilmStorage.filmById(filmId);
         inMemoryUserStorage.checkIdentifier(userId);
 
-        List<Long> likes = film.getListLikes();
+        List<Long> likes = film.getLikeList();
         likes.remove(userId);
-        film.setListLikes(likes);
+        film.setLikeList(likes);
     }
 
     public int getLength(Film film) {
-        return film.getListLikes().size();
+        return film.getLikeList().size();
     }
 
     public void checkingFilmInStorage(Film film) {

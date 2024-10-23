@@ -13,5 +13,7 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private List<Long> listLikes = new ArrayList<>();
+    private List<Long> likeList = new ArrayList<>();
+    private Genre genre;
+    private MpaRating mpaRating;
 }

@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     @NonNull
-    private InMemoryUserStorage inMemoryUserStorage;
+    private UserStorage inMemoryUserStorage;
 
     public Collection<User> findAll() {
         return inMemoryUserStorage.findAll();
@@ -40,6 +40,7 @@ public class UserService {
 
     public void addFriend(Long userId, Long friendId) {
         List<User> userList = checkAndGetUserById(userId, friendId);
+
 
         List<Long> userFriends = userList.get(0).getListFriends();
         userFriends.add(userList.get(1).getId());
