@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -19,6 +21,7 @@ public class FilmController {
 
     private final LocalDate beginning = LocalDate.of(1895, 12, 28);
 
+    @Autowired
     protected FilmService filmService;
 
     @GetMapping
