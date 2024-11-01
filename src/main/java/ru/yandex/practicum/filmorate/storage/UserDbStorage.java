@@ -7,7 +7,10 @@ import ru.yandex.practicum.filmorate.dal.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -15,8 +18,6 @@ public class UserDbStorage implements UserStorage {
 
     @Autowired
     private UserRepository userRepository;
-
-    private HashMap<Long, User> users = new HashMap<>();
 
     @Override
     public Collection<User> findAll() {
