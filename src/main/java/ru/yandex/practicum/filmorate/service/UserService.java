@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.UserRepository;
 import ru.yandex.practicum.filmorate.dal.mappers.UserRowMapper;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 public class UserService {
 
     @Autowired
-    @Qualifier("userDbStorage")
     private UserStorage inMemoryUserStorage;
 
     @Autowired
