@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/films")
@@ -30,7 +31,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film filmById(@PathVariable(name = "id") Long id) {
+    public Optional<Film> filmById(@PathVariable(name = "id") Long id) {
         log.info("получение фильма по идентификатору id: {}", id);
 
         return filmService.filmById(id);

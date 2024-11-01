@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -31,16 +32,17 @@ public class UserController {
     public User userById(@PathVariable(name = "id") Long id) {
         log.info("получение фильма по идентификатору id: {}", id);
 
-        return userService.userByIdentifier(id);
+//        return userService.userByIdentifier(id);
+    return null;
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> listОfAllUserFriends(@PathVariable(name = "id") Long id) {
+    public List<Optional<User>> listОfAllUserFriends(@PathVariable(name = "id") Long id) {
         return userService.getUserFriend(id);
     }
 
     @GetMapping("{id}/friends/common/{otherId}")
-    public List<User> listOfCommonFriends(@PathVariable(name = "id") Long id, @PathVariable(name = "otherId") Long otherId) {
+    public List<Optional<User>> listOfCommonFriends(@PathVariable(name = "id") Long id, @PathVariable(name = "otherId") Long otherId) {
         return userService.commonOfFriends(id, otherId);
     }
 

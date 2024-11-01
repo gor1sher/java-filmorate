@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.FilmRepository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -10,23 +11,28 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class FilmService {
 
-    @NonNull
+    @Autowired
+    @Qualifier("filmDbStorage")
     private FilmStorage inMemoryFilmStorage;
 
-    @NonNull
+    @Autowired
+    @Qualifier("userDbStorage")
     private UserStorage inMemoryUserStorage;
 
+    @Autowired
+    private FilmRepository filmRepository;
+
     public Collection<Film> findAll() {
-        return inMemoryFilmStorage.findAll();
+        return filmRepository.findAll();
     }
 
-    public Film filmById(Long id) {
+    public Optional<Film> filmById(Long id) {
         return inMemoryFilmStorage.filmById(id);
     }
 
@@ -39,21 +45,23 @@ public class FilmService {
     }
 
     public void addLike(Long filmId, Long userId) {
-        Film film = inMemoryFilmStorage.filmById(filmId);
-        inMemoryUserStorage.checkIdentifier(userId);
+        Optional<Film> film = inMemoryFilmStorage.filmById(filmId);
+        inMemoryUserStorage.checkId(userId);
 
-        List<Long> likes = film.getLikeList();
+        List<Long> likes = film.get().getLikeList();
         likes.add(userId);
-        film.setLikeList(likes);
+        film.get().setLikeList(likes);
+        filmRepository.update(film.get());
     }
 
     public void removeLike(Long filmId, Long userId) {
-        Film film = inMemoryFilmStorage.filmById(filmId);
-        inMemoryUserStorage.checkIdentifier(userId);
+        Optional<Film> film = inMemoryFilmStorage.filmById(filmId);
+        inMemoryUserStorage.checkId(userId);
 
-        List<Long> likes = film.getLikeList();
+        List<Long> likes = film.get().getLikeList();
         likes.remove(userId);
-        film.setLikeList(likes);
+        film.get().setLikeList(likes);
+        filmRepository.update(film.get());
     }
 
     public int getLength(Film film) {

@@ -1,0 +1,19 @@
+--CREATE TABLE users (
+--    id BIGINT,
+--    email VARCHAR(255) NOT NULL,
+--    login VARCHAR(255) NOT NULL,
+--    name VARCHAR(255) NOT NULL,
+--    birthday DATE,
+--    listFriends VARCHAR(255)
+--);
+--
+--CREATE TABLE films (
+--    id BIGINT,
+--    name VARCHAR(255) NOT NULL,
+--    description TEXT,
+--    releaseDate DATE,
+--    duration INT,
+--    likeList VARCHAR(255),
+--    genre VARCHAR(255),6
+--    mpaRating VARCHAR(255)
+--);
