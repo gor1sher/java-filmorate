@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.FilmRepository;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -77,5 +79,14 @@ public class FilmService {
                 .sorted(Comparator.comparingInt(film -> getLength((Film) film)).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    public List<Genre> getGenres(){
+        return List.of(Genre.ACTION, Genre.ANIMATION, Genre.COMEDY, Genre.DOCUMENTARY, Genre.DRAMA,
+                Genre.THRILLER);
+    }
+
+    public List<MpaRating> getMpaRatings(){
+        return List.of(MpaRating.NC_17, MpaRating.PG_13, MpaRating.G, MpaRating.PG, MpaRating.R);
     }
 }
