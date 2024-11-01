@@ -81,12 +81,12 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    public List<Genre> getGenres(){
+    public List<Genre> getGenres() {
         return List.of(Genre.ACTION, Genre.ANIMATION, Genre.COMEDY, Genre.DOCUMENTARY, Genre.DRAMA,
                 Genre.THRILLER);
     }
 
-    public List<MpaRating> getMpaRatings(){
+    public List<MpaRating> getMpaRatings() {
         return List.of(MpaRating.NC_17, MpaRating.PG_13, MpaRating.G, MpaRating.PG, MpaRating.R);
     }
 }
