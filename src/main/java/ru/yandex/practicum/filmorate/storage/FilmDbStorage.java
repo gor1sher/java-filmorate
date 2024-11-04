@@ -33,8 +33,6 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        film.setId(getNextId());
-
         return filmRepository.save(film);
     }
 

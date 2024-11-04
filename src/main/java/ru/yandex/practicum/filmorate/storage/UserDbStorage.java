@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ public class UserDbStorage implements UserStorage {
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }
-        user.setId(getNextId());
         user.setListFriends(new ArrayList<>());
 
         return userRepository.save(user);
@@ -70,6 +70,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     private long getNextId() {
+        var users = userRepository.findAll();
         long currentMaxId = userRepository.findAll()
                 .stream()
                 .mapToLong(User::getId)
