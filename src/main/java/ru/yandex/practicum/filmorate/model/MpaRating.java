@@ -17,8 +17,8 @@ public enum MpaRating {
     }
 
     public static MpaRating getById(int id) {
-        for(MpaRating e : values()) {
-            if(e.id == id) return e;
+        for (MpaRating e : values()) {
+            if (e.id == id) return e;
         }
         return null;
     }

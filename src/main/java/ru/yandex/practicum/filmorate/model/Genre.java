@@ -18,8 +18,8 @@ public enum Genre {
     }
 
     public static Genre getById(int id) {
-        for(Genre e : values()) {
-            if(e.id == id) return e;
+        for (Genre e : values()) {
+            if (e.id == id) return e;
         }
         return null;
     }

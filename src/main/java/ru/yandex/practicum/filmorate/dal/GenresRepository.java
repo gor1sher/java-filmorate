@@ -1,17 +1,14 @@
 package ru.yandex.practicum.filmorate.dal;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.mappers.GenreRowMapper;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genres;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class GenresRepository extends BaseRepository{
+public class GenresRepository extends BaseRepository {
 
     public GenresRepository(JdbcTemplate jdbc) {
         super(jdbc, new GenreRowMapper());

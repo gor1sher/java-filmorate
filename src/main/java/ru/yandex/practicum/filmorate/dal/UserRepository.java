@@ -6,9 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +43,7 @@ public class UserRepository extends BaseRepository<User> {
                 user.getName(),
                 user.getBirthday().toString(),
                 user.getListFriends().toString()
-                );
+        );
         user.setId(id);
         return user;
     }
@@ -60,7 +57,7 @@ public class UserRepository extends BaseRepository<User> {
                 user.getBirthday().toString(),
                 user.getListFriends().toString(),
                 user.getId()
-                );
+        );
         return user;
     }
 }

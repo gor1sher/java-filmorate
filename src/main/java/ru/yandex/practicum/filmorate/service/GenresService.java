@@ -10,11 +10,11 @@ public class GenresService {
     @Autowired
     private GenresRepository genresRepository;
 
-    public void getAllGenres(){
+    public void getAllGenres() {
         genresRepository.findAll();
     }
 
-    public void findById(Long id){
+    public void findById(Long id) {
         genresRepository.findById(id);
     }
 }

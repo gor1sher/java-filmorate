@@ -68,7 +68,7 @@ public class FilmRepository extends BaseRepository<Film> {
                 film.getGenres().stream().map(String::valueOf).collect(Collectors.joining(",")),
                 film.getMpa().getId(),
                 film.getId()
-                );
+        );
         return film;
     }
 

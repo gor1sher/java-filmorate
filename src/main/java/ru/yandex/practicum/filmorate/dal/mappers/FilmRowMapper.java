@@ -3,14 +3,13 @@ package ru.yandex.practicum.filmorate.dal.mappers;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.*;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class FilmRowMapper implements RowMapper<Film> {
