@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.dal.mappers;
 
+import io.micrometer.common.util.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,10 +23,9 @@ public class FilmRowMapper implements RowMapper<Film> {
         Timestamp releaseDate = resultSet.getTimestamp("releaseDate");
         film.setReleaseDate(releaseDate.toLocalDateTime().toLocalDate());
         film.setDuration(resultSet.getInt("duration"));
-        film.setLikeList(Arrays.stream(resultSet.getString("likeList").split(",")).map(Long::valueOf).toList());
-        film.setGenre(Genre.valueOf(resultSet.getString("genre")));
-        film.setMpaRating(MpaRating.valueOf(resultSet.getString("mpaRating")));
-
+        film.setLikeList(Arrays.stream(resultSet.getString("likeList").split(",")).filter(StringUtils::isNotBlank).map(Long::valueOf).toList());
+        film.setGenres(Arrays.stream(resultSet.getString("genres").split(",")).filter(StringUtils::isNotBlank).map(Long::valueOf).toList());
+        film.setMpa(new Mpa(resultSet.getInt("mpaRating")));
         return film;
     }
 }

@@ -7,16 +7,17 @@ import ru.yandex.practicum.filmorate.dal.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
-@Component("userDbStorage")
+@Component
 @Slf4j
 public class UserDbStorage implements UserStorage {
 
     @Autowired
     private UserRepository userRepository;
-
-    private HashMap<Long, User> users = new HashMap<>();
 
     @Override
     public Collection<User> findAll() {
@@ -34,7 +35,6 @@ public class UserDbStorage implements UserStorage {
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }
-        user.setId(getNextId());
         user.setListFriends(new ArrayList<>());
 
         return userRepository.save(user);
@@ -69,6 +69,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     private long getNextId() {
+        var users = userRepository.findAll();
         long currentMaxId = userRepository.findAll()
                 .stream()
                 .mapToLong(User::getId)

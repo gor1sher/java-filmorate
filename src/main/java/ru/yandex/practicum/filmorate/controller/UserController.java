@@ -29,11 +29,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User userById(@PathVariable(name = "id") Long id) {
+    public Optional<User> userById(@PathVariable(name = "id") Long id) {
         log.info("получение фильма по идентификатору id: {}", id);
 
-//        return userService.userByIdentifier(id);
-    return null;
+        return userService.userByIdentifier(id);
     }
 
     @GetMapping("/{id}/friends")

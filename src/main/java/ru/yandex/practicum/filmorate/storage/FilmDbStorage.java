@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-@Component("filmDbStorage")
+@Component
 @Slf4j
 public class FilmDbStorage implements FilmStorage {
 
@@ -33,8 +33,6 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        film.setId(getNextId());
-
         return filmRepository.save(film);
     }
 

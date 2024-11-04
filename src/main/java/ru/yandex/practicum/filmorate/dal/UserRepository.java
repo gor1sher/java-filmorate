@@ -14,8 +14,8 @@ public class UserRepository extends BaseRepository<User> {
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
     private static final String FIND_BY_EMAIL_QUERY = "SELECT * FROM users WHERE email = ?";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-    private static final String INSERT_QUERY = "INSERT INTO users(id, email, login, name, birthday, listFriends)" +
-            "VALUES (?, ?, ?, ?, ?, ?) returning id";
+    private static final String INSERT_QUERY = "INSERT INTO users(email, login, name, birthday, listFriends)" +
+            "VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ?, listFriends = ? WHERE id = ?";
 
     @Autowired
@@ -38,12 +38,11 @@ public class UserRepository extends BaseRepository<User> {
     public User save(User user) {
         long id = insert(
                 INSERT_QUERY,
-                user.getId(),
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
-                user.getBirthday(),
-                user.getListFriends()
+                user.getBirthday().toString(),
+                user.getListFriends().toString()
         );
         user.setId(id);
         return user;
@@ -52,12 +51,12 @@ public class UserRepository extends BaseRepository<User> {
     public User update(User user) {
         update(
                 UPDATE_QUERY,
-                user.getId(),
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
-                user.getBirthday(),
-                user.getListFriends()
+                user.getBirthday().toString(),
+                user.getListFriends().toString(),
+                user.getId()
         );
         return user;
     }
